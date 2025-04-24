@@ -53,7 +53,7 @@ app.post("/generate-preview", async (req, res) => {
     // Return preview link
     res.json({
       success: true,
-      previewLink: `http://localhost:${PORT}/preview/${previewId}`
+      previewLink: `https://test-production-8541.up.railway.app/preview/${previewId}`
     });
 
   } catch (error) {
