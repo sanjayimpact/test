@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Website Info</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f9fc;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 30px;
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 18px;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Fill Website Information</h2>
+
+    <form id="websiteForm">
+      <label>Select Template:</label>
+      <select name="templateId" required>
+        <option value="template1">Template 1</option>
+       
+      </select>
+
+      <label>Business Name:</label>
+      <input type="text" name="business_name" required />
+
+      <label>Description:</label>
+      <textarea name="description" rows="4" required></textarea>
+
+      <label>Show Services Section:</label>
+      <select name="showServices">
+        <option value="yes" selected>Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <label>Show Testimonials Section:</label>
+      <select name="showTestimonials">
+        <option value="yes" selected>Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      
+
+      <button type="submit">Generate Preview</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('websiteForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = new URLSearchParams(formData);
+
+      try {
+        const response = await fetch('/generate-preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: data,
+        });
+
+        const json = await response.json();
+
+        if (json.success) {
+          result.innerHTML = `
+            <h3 style="color:green;">✅ Preview Generated!</h3>
+            <p><a href="${json.previewLink}" target="_blank">${json.previewLink}</a></p>
+          `;
+        } else {
+          result.innerHTML = `<p style="color:red;">❌ ${json.message}</p>`;
+        }
+      } catch (err) {
+        result.innerHTML = `<p style="color:red;">⚠️ Something went wrong.</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
